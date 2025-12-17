@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Uçak Arama Motoru</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-plane"></i> AIRCRAFT SEARCH</h1>
+            <p>Hibrit Arama Motoru (ResNet50 & CLIP)</p>
+        </header>
+
+        <div class="search-box">
+            <div class="tabs">
+                <div class="tab-btn active" onclick="openTab('text')"><i class="fas fa-keyboard"></i> Metin ile Ara</div>
+                <div class="tab-btn" onclick="openTab('image')"><i class="fas fa-camera"></i> Fotoğraf ile Ara</div>
+            </div>
+
+            <form action="/" method="POST" id="text-form" class="search-form">
+                <input type="text" name="text_query" placeholder="Örn: A photo of a F-16 aircraft..." required>
+                <button type="submit">ARA</button>
+            </form>
+
+            <form action="/" method="POST" enctype="multipart/form-data" id="image-form" class="search-form" style="display: none;">
+                <input type="file" name="image_query" accept="image/*" required>
+                <button type="submit">YÜKLE VE BUL</button>
+            </form>
+        </div>
+
+        {% if query %}
+        <div class="results-info">
+            <h3>Sonuçlar: "<span>{{ query }}</span>"</h3>
+        </div>
+        {% endif %}
+
+        <div class="gallery">
+            {% for item in results %}
+            <div class="card">
+                <a href="{{ url_for('serve_image', filepath=item.path) }}" target="_blank" class="card-link">
+                    
+                    <img src="{{ url_for('serve_image', filepath=item.path) }}" alt="Uçak">
+                    
+                    <div class="card-info">
+                        <p>{{ item.name }}</p>
+                    </div>
+
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <script>
+        function openTab(tabName) {
+            document.getElementById('text-form').style.display = (tabName === 'text') ? 'flex' : 'none';
+            document.getElementById('image-form').style.display = (tabName === 'image') ? 'flex' : 'none';
+            
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            event.currentTarget.classList.add('active');
+        }
+    </script>
+</body>
+</html>

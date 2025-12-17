@@ -1,0 +1,52 @@
+paths:
+  images_dir: "data/images/fgvc-aircraft-2013b/data/images"
+  splits_dir: "data"
+  outputs_dir: "outputs"
+  checkpoints_dir: "outputs/checkpoints"
+  embeddings_dir: "outputs/embeddings"
+  index_dir: "outputs/index"
+  plots_dir: "outputs/plots"
+
+data:
+  train_list: "images_train.txt"
+  val_list:   "images_val.txt"
+  test_list:  "images_test.txt"
+
+  
+  variant_train: "images_variant_train.txt"
+  variant_val:   "images_variant_val.txt"
+  variant_test:  "images_variant_test.txt"
+  
+
+  bbox_file: "images_box.txt"
+
+train:
+  img_size: 224
+  batch_size: 16       
+  epochs: 30           
+  
+  lr: 0.0001
+  weight_decay: 0.05
+  loss: "ms_loss"
+  ms_alpha: 2.0
+  ms_beta: 50.0
+  ms_base: 0.5
+  proj_dim: 128
+  backbone: "resnet50"
+  
+  num_workers: 2
+  steps_per_epoch: 220   
+
+eval:
+  recall_k: [1,5,10]
+  map_k: 10
+
+scheduler:
+  type: "step"
+  step_size: 15  
+  gamma: 0.2
+
+index:
+  use_faiss: true
+  faiss_metric: "ip"
+  top_k: 10
